@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 30;
     private EditText etDescription;
-    private Button btnPicture, btnSubmit;
+    private Button btnPicture, btnSubmit, btnLogout;
     private ImageView ivPicture;
     private File photoFile;
     private String photoFileName = "photo.jpg";
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         btnPicture = findViewById(R.id.btnPicture);
         btnSubmit = findViewById(R.id.btnSubmit);
         ivPicture = findViewById(R.id.ivImage);
+        btnLogout = findViewById(R.id.btnLogout);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +72,22 @@ public class MainActivity extends AppCompatActivity {
                 launchCamera();
             }
         });
-        //queryPosts();
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.logOut();
+                goLoginActivity();
+            }
+        });
+
+    }
+
+    private void goLoginActivity()
+    {
+        Intent i = new Intent(this, LoginActivity.class);
+        startActivity(i);
+        finish();
     }
 
     private void launchCamera()
