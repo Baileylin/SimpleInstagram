@@ -2,7 +2,7 @@
 
 **SimpleInstagram** is a photo sharing app similar to Instagram but using Parse as its backend.
 
-Time spent: **4** hours spent in total
+Time spent: **4.5** hours spent in total
 
 ## User Stories
 
