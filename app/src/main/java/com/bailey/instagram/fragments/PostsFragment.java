@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,9 +37,11 @@ public class PostsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "PostsFragment";
 
+
     private RecyclerView rvPosts;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
+    protected SwipeRefreshLayout swipeRefreshLayout;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -86,6 +89,18 @@ public class PostsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rvPosts = view.findViewById(R.id.rvPosts);
+        swipeRefreshLayout = view.findViewById(R.id.swipeContainer);
+        // Configure the refreshing colors
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                queryPosts();
+            }
+        });
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
@@ -112,8 +127,10 @@ public class PostsFragment extends Fragment {
                 {
                     Log.i(TAG, "Post: "+ post.getDescription() + post.getUser().getUsername());
                 }
-                allPosts.addAll(posts);
-                adapter.notifyDataSetChanged();
+                adapter.clear();
+                adapter.addAll(posts);
+                // Now we call setRefreshing(false) to signal refresh has finished
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
